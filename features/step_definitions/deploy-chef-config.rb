@@ -1,5 +1,10 @@
 
-Étantdonnéque('la variable {word} est absent des données {word} bag {word}') do |variable_name, item, databag|
+Étantdonnéque('la variable {word} est absent des données {word} du sac {word}') do |variable_name, item, databag|
+    extend Context::ConfigHelper
+    pending # Write code here that turns the phrase above into concrete actions
+end
+
+Étantdonnéque('la variable {word} est présent des données {word} du sac {word}') do |variable_name, item, databag|
     extend Context::ConfigHelper
     pending # Write code here that turns the phrase above into concrete actions
 end
