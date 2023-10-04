@@ -15,5 +15,5 @@ Fonctionnalité: Testons la recherche de variables et de leurs valeurs
   Alors affiché la valeur enregistré dans le data bag <data_bag> pour <variable_name>
 
   Exemples:
-    | variable_name | data_bag |
+    | variable_name  |    data_bag   | item |
     | context_config | configuration | test |
