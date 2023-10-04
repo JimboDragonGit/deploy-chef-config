@@ -1,5 +1,5 @@
 
-Étantdonnéque('la variable deploy-context est absent du data bag configuration') do
+Étantdonnéque('la variable {word} est absent des données {word} bag {word}') do |variable_name, item, databag|
     extend Context::ConfigHelper
     pending # Write code here that turns the phrase above into concrete actions
 end
