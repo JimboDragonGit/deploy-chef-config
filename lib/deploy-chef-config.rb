@@ -1,10 +1,16 @@
 require 'deploy-context'
+require 'deploy-context/deploy'
+require 'deploy-context/deploy/git'
+require 'deploy-context/deploy/ruby'
+require 'deploy-context/deploy/cucumber'
+
+require_relative 'deploy-chef-config/context/config'
 
 module Context
   class DeployChefConfig < Deploy
-    include GitDeployerHelper
-    include RubyDeployerHelper
-    include CucumberDeployerHelper
+    include DeployHelpers::RubyHelper
+    include DeployHelpers::CucumberHelper
+    include ConfigHelper
 
     def self.deployer
       @deployer = Context::DeployChefConfig.new(Dir.pwd) if @deployer.nil?

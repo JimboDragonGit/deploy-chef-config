@@ -1,2 +1,2 @@
 #!/usr/bin/env ruby
-require 'deploy-chef-config/context/binary'
+require 'deploy-chef-config/context/deploy-chef-config'
