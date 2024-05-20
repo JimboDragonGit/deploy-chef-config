@@ -48,7 +48,7 @@ require 'git-version-bump'
   s.add_development_dependency('chef')
   s.add_development_dependency('test-kitchen')
 
-  s.add_runtime_dependency('deploy-context')
+  s.add_runtime_dependency('deploy-context', '>= 2')
 
   # s.add_runtime_dependency('colorator',             '~> 1.0')
   # s.add_runtime_dependency('em-websocket',          '~> 0.5')

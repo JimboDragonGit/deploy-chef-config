@@ -1,0 +1,69 @@
+---
+provisioner:
+  name: chef_infra
+  always_update_cookbooks: true
+  kitchen_root: <%= ::Dir.pwd %>
+
+verifier:
+  name: inspec
+
+platforms:
+  - name: vb-deploy-context-chefserver
+    driver:
+      name: vagrant
+      box: bento/ubuntu-20.04
+      cache_directory: <%= File.expand_path("#{::Dir.pwd}/.kitchen/omnibus/cache") %>
+      kitchen_cache_directory: <%= File.expand_path("#{::Dir.pwd}/.kitchen/cache") %>
+      domain: <%= ENV['AWS_SSH_DEPLOYCONTEXT_DOMAIN_NAME'] %>
+      vm_hostname: chef.<%= ENV['AWS_SSH_DEPLOYCONTEXT_DOMAIN_NAME'] %>
+      network:
+      - ["forwarded_port", {guest: 443, host: 4431}]
+      - ["forwarded_port", {guest: 22, host: 2221}]
+      customize:
+        memory: 8196
+        cpus: 2
+        firmware: bios
+        hwvirtex: "on"
+        vtxvpid: "on"
+        vtxux: "on"
+        nested-hw-virt: "on"
+        cpuhotplug: "on"
+        vrde: "on"
+        vrdeport: 3390
+        autostart-enabled: "on"
+      pre_create_command: "ssh-keygen -f \"<%= ENV['HOME'] %>/.ssh/known_hosts\" -R \"[127.0.0.1]:2221\"; ssh-keygen -f \"<%= ENV['HOME'] %>/.ssh/known_hosts\" -R \"[<%= ENV['AWS_SSH_DEPLOYCONTEXT_DOMAIN_NAME'] %>]:2221\";"
+    provisioner:
+      product_name: chef-workstation
+  - name: dock-deploy-context-chefserver
+    driver:
+      name: dokken
+      image: ubuntu:focal
+      socket: tcp://127.0.0.1:2375
+      hostname: chef.<%= ENV['AWS_SSH_DEPLOYCONTEXT_DOMAIN_NAME'] %>
+    provisioner:
+      name: dokken
+    transport:
+      name: dokken
+    intermediate_instructions:
+      - RUN /usr/bin/apt-get update
+      - RUN /usr/bin/apt-get install lsb_release
+      - RUN mkdir -p /opt/kitchen
+      - COPY . /opt/kitchen
+      - WORKDIR /opt/kitchen
+    ports:
+    - container_port:
+      - host_ip: 127.0.0.1
+      - host_port: 4431
+
+suites:
+  - name: require
+    named_run_list: chefserver
+    attributes:
+    includes:
+      - vb-deploy-context-chefserver
+  - name: require
+    named_run_list: chefserver
+    attributes:
+    includes:
+      - dock-deploy-context-chefserver
+      - aws-deploy-context-chefserver
